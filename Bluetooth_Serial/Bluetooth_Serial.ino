@@ -48,26 +48,7 @@ void loop()
   Tmp=Wire.read()<<8|Wire.read();  //0x41 (TEMP_OUT_H) & 0x42 (TEMP_OUT_L)
   GyX=Wire.read()<<8|Wire.read();  //0x43 (GYRO_XOUT_H) & 0x44 (GYRO_XOUT_L)
   GyY=Wire.read()<<8|Wire.read();  //0x45 (GYRO_YOUT_H) & 0x46 (GYRO_YOUT_L)
-  GyZ=Wire.read()<<8|Wire.read();  //0x47 (GYRO_ZOUT_H) & 0x48 (GYRO_ZOUT_L)
-
-  
-  // Read device output if available.  
-  if (bluetooth.available()) 
-  {  
-     while(bluetooth.available()) 
-     { // Enquanto tiver mais dados ele continua lendo
-      delay(10); //Aguarda 10ms
-      Serial.write((char)bluetooth.read()); 
-     }  
-   Serial.println(""); //Pula para a linha seguinte
-  }  
-   
-  // Lê dados pela usb e envia para o bluetooth.  
-  if (Serial.available())
-  {  
-    delay(10); // Aguarda 10ms 
-    bluetooth.write(Serial.read());  
-  }  
+  GyZ=Wire.read()<<8|Wire.read();  //0x47 (GYRO_ZOUT_H) & 0x48 (GYRO_ZOUT_L) 
   
   //Envia valor X do acelerometro para a serial e o LCD
   Serial.print("AcX = "); Serial.print(AcX);
@@ -99,5 +80,5 @@ void loop()
   bluetooth.write(" | GyZ = "); bluetooth.print(GyZ, DEC);
   
   //Aguarda 300 ms e reinicia o processo
-  delay(300);
+  delay(30);
 }
