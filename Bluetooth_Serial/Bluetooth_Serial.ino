@@ -9,7 +9,7 @@
 #include<Wire.h>
     
 //Define os pinos para a serial do bluetooth, pino 10 RX e pino 11 TX  
-SoftwareSerial mySerial(10, 11); // RX, TX  
+SoftwareSerial bluetooth(10, 11); // RX, TX  
 
 
 //Endereco I2C do MPU6050
@@ -24,37 +24,18 @@ void setup()
   Serial.begin(115200);  
   Serial.println("Digite os comandos AT :");  
   //Inicia a serial configurada nas portas 10 e 11
-  mySerial.begin(9600);  
+  bluetooth.begin(9600);  
 
   Wire.begin();
   Wire.beginTransmission(MPU);
-  Wire.write(0x6B); 
-  
-  //Inicializa o MPU-6050
-  Wire.write(0); 
+  Wire.write(0x6B);  // PWR_MGMT_1 register
+  Wire.write(0);     // set to zero (wakes up the MPU-6050)
   Wire.endTransmission(true);
+  
 }  
     
 void loop()  
 {  
-  // Read device output if available.  
-  if (mySerial.available()) 
-  {  
-     while(mySerial.available()) 
-     { // Enquanto tiver mais dados ele continua lendo
-      delay(10); //Aguarda 10ms
-      Serial.write((char)mySerial.read()); 
-     }  
-   Serial.println(""); //Pula para a linha seguinte
-  }  
-   
-  // Lê dados pela usb e envia para o bluetooth.  
-  if (Serial.available())
-  {  
-    delay(10); // Aguarda 10ms 
-    mySerial.write(Serial.read());  
-  }  
-
   Wire.beginTransmission(MPU);
   Wire.write(0x3B);  // starting with register 0x3B (ACCEL_XOUT_H)
   Wire.endTransmission(false);
@@ -68,28 +49,54 @@ void loop()
   GyX=Wire.read()<<8|Wire.read();  //0x43 (GYRO_XOUT_H) & 0x44 (GYRO_XOUT_L)
   GyY=Wire.read()<<8|Wire.read();  //0x45 (GYRO_YOUT_H) & 0x46 (GYRO_YOUT_L)
   GyZ=Wire.read()<<8|Wire.read();  //0x47 (GYRO_ZOUT_H) & 0x48 (GYRO_ZOUT_L)
+
+  
+  // Read device output if available.  
+  if (bluetooth.available()) 
+  {  
+     while(bluetooth.available()) 
+     { // Enquanto tiver mais dados ele continua lendo
+      delay(10); //Aguarda 10ms
+      Serial.write((char)bluetooth.read()); 
+     }  
+   Serial.println(""); //Pula para a linha seguinte
+  }  
+   
+  // Lê dados pela usb e envia para o bluetooth.  
+  if (Serial.available())
+  {  
+    delay(10); // Aguarda 10ms 
+    bluetooth.write(Serial.read());  
+  }  
   
   //Envia valor X do acelerometro para a serial e o LCD
   Serial.print("AcX = "); Serial.print(AcX);
+  bluetooth.write("AcX = "); bluetooth.write(AcX);
 
   //Envia valor Y do acelerometro para a serial e o LCD
   Serial.print(" | AcY = "); Serial.print(AcY);
+  bluetooth.write(" | AcY = "); bluetooth.write(AcY);
   
   //Envia valor Z do acelerometro para a serial e o LCD
   Serial.print(" | AcZ = "); Serial.print(AcZ);
+  bluetooth.write(" | AcZ = "); bluetooth.write(AcZ);
   
   //Envia valor da temperatura para a serial e o LCD
   //Calcula a temperatura em graus Celsius
   Serial.print(" | Tmp = "); Serial.print(Tmp/340.00+36.53);
+  bluetooth.write(" | Tmp = "); bluetooth.write(Tmp/340.00+36.53);
   
   //Envia valor X do giroscopio para a serial e o LCD
   Serial.print(" | GyX = "); Serial.print(GyX);
+  bluetooth.write(" | GyX = "); bluetooth.write(GyX);
   
   //Envia valor Y do giroscopio para a serial e o LCD  
   Serial.print(" | GyY = "); Serial.print(GyY);
+  bluetooth.write(" | GyY = "); bluetooth.write(GyY);
   
   //Envia valor Z do giroscopio para a serial e o LCD
   Serial.print(" | GyZ = "); Serial.println(GyZ);
+  bluetooth.write(" | GyZ = "); bluetooth.write(GyZ);
   
   //Aguarda 300 ms e reinicia o processo
   delay(300);
