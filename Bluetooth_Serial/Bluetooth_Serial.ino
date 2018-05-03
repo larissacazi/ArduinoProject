@@ -71,32 +71,32 @@ void loop()
   
   //Envia valor X do acelerometro para a serial e o LCD
   Serial.print("AcX = "); Serial.print(AcX);
-  bluetooth.write("AcX = "); bluetooth.write(AcX);
+  bluetooth.write("AcX = "); bluetooth.print(AcX, DEC);
 
   //Envia valor Y do acelerometro para a serial e o LCD
   Serial.print(" | AcY = "); Serial.print(AcY);
-  bluetooth.write(" | AcY = "); bluetooth.write(AcY);
+  bluetooth.write(" | AcY = "); bluetooth.print(AcY, DEC); bluetooth.write(AcY);
   
   //Envia valor Z do acelerometro para a serial e o LCD
   Serial.print(" | AcZ = "); Serial.print(AcZ);
-  bluetooth.write(" | AcZ = "); bluetooth.write(AcZ);
+  bluetooth.write(" | AcZ = "); bluetooth.print(AcZ, DEC);
   
   //Envia valor da temperatura para a serial e o LCD
   //Calcula a temperatura em graus Celsius
   Serial.print(" | Tmp = "); Serial.print(Tmp/340.00+36.53);
-  bluetooth.write(" | Tmp = "); bluetooth.write(Tmp/340.00+36.53);
+  bluetooth.write(" | Tmp = "); bluetooth.print(Tmp/340.00+36.53, DEC);
   
   //Envia valor X do giroscopio para a serial e o LCD
   Serial.print(" | GyX = "); Serial.print(GyX);
-  bluetooth.write(" | GyX = "); bluetooth.write(GyX);
+  bluetooth.write(" | GyX = "); bluetooth.print(GyX, DEC);
   
   //Envia valor Y do giroscopio para a serial e o LCD  
   Serial.print(" | GyY = "); Serial.print(GyY);
-  bluetooth.write(" | GyY = "); bluetooth.write(GyY);
+  bluetooth.write(" | GyY = "); bluetooth.print(GyY, DEC);
   
   //Envia valor Z do giroscopio para a serial e o LCD
   Serial.print(" | GyZ = "); Serial.println(GyZ);
-  bluetooth.write(" | GyZ = "); bluetooth.write(GyZ);
+  bluetooth.write(" | GyZ = "); bluetooth.print(GyZ, DEC);
   
   //Aguarda 300 ms e reinicia o processo
   delay(300);
